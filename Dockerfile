@@ -22,5 +22,5 @@ COPY . .
 # Expose the port the app runs on
 EXPOSE 8000
 
-# Run the application using gunicorn for production stability
-CMD ["gunicorn", "app.main:app", "-w", "4", "-k", "uvicorn.workers.UvicornWorker", "--bind", "0.0.0.0:8000"]
+# Run the application using uvicorn natively
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]

@@ -1,12 +1,13 @@
 fastapi
-uvicorn
+uvicorn[standard]
 gunicorn
 python-multipart
 openpyxl
-opencv-python
+opencv-python-headless
 pillow
 pydantic
 google-generativeai
 python-dotenv
 pymupdf
 numpy
+easyocr
