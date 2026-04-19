@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: energybae-intelligence
+    env: docker
+    plan: free
+    region: oregon 
+    envVars:
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: ENERGYBAE_ACCESS_KEY
+        value: energy2026
+      - key: PYTHON_VERSION
+        value: 3.11.0
+    autoDeploy: true

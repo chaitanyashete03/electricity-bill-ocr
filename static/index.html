@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EnergyBae | AI Billing Intelligence</title>
+    <link rel="stylesheet" href="/static/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Security Overlay -->
+    <div id="security-overlay">
+        <div class="card security-card fade-in">
+            <h2>Authorized Access Only</h2>
+            <p style="color: var(--text-muted); margin-bottom: 2rem;">Please enter your EnergyBae Access Key to proceed.</p>
+            <div class="form-group">
+                <input type="password" id="accessKey" placeholder="Enter Access Key..." autocomplete="off">
+            </div>
+            <button class="btn primary-btn glow" id="loginBtn" style="width: 100%; margin-top: 1.5rem;">Access Dashboard</button>
+            <p id="error-msg" style="color: var(--error-color); margin-top: 1rem; font-size: 0.9rem;" class="hidden">Invalid Access Key. Please try again.</p>
+        </div>
+    </div>
+
+    <div class="background-globes">
+        <div class="globe globe-1"></div>
+        <div class="globe globe-2"></div>
+    </div>
+    
+    <div class="container">
+        <header class="glass-header slide-up">
+            <h1>EnergyBae <span class="highlight">Intelligence</span></h1>
+            <p class="text-gradient">Professional Electricity Bill Automation</p>
+        </header>
+
+        <main>
+            <!-- Step 1: Upload -->
+            <section id="upload-section" class="card fade-in">
+                <h2>Upload Billing Document</h2>
+                <div class="upload-area" id="drop-area">
+                    <p>Drag & Drop your MSEDCL, BSES, or TATA bill here</p>
+                    <p style="font-size: 0.85rem;">Supports PDF, JPG, PNG & Multi-page exports</p>
+                    <input type="file" id="fileElem" accept="image/*,.pdf" style="display:none">
+                    <button class="btn primary-btn" id="uploadBtn">Browse Documents</button>
+                </div>
+                <div id="loading" class="hidden">
+                    <div class="spinner"></div>
+                    <p class="text-gradient" style="font-weight: 600;">Neural OCR Processing...</p>
+                    <p style="color: var(--text-muted); font-size: 0.9rem;">Extracting Marathi & English data points</p>
+                </div>
+            </section>
+
+            <!-- Step 2: Verification -->
+            <section id="verify-section" class="card hidden slide-up">
+                <div class="header-split">
+                    <h2>Verify Extraction</h2>
+                    <div class="confidence-badge" id="confidence-score">Analysis Pending</div>
+                </div>
+                <p id="provider-name" class="subtitle text-gradient" style="margin-bottom: 2rem; font-weight: 600;"></p>
+                <form id="verify-form">
+                    <div class="grid-form" id="form-fields">
+                        <!-- Extractions populate here -->
+                    </div>
+                    <div class="action-buttons" style="display: flex; gap: 1rem; margin-top: 1rem;">
+                        <button type="button" class="btn secondary-btn" id="retryBtn" style="flex: 1;">Discard</button>
+                        <button type="submit" class="btn primary-btn glow" style="flex: 2;">Generate Analysis Sheet</button>
+                    </div>
+                </form>
+            </section>
+            
+            <!-- Step 3: Success -->
+            <section id="success-section" class="card hidden slide-up" style="text-align: center;">
+                <div class="success-icon">✓</div>
+                <h2>Generation Complete</h2>
+                <p style="color: var(--text-muted); margin-bottom: 2rem;">Your Excel analysis sheet has been rebuilt with all formulas and monthly logic intact.</p>
+                <div style="display: flex; flex-direction: column; gap: 1rem;">
+                    <a href="/download" class="btn primary-btn glow" style="width: 100%;" download>Download Report (.xlsx)</a>
+                    <button class="btn secondary-btn" onclick="location.reload()">Start New Session</button>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="/static/script.js"></script>
+</body>
+</html>

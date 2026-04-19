@@ -1,0 +1,92 @@
+{
+  "MSEDCL": {
+    "keywords": ["msedcl", "mahavitaran", "maharashtra state electricity", "महावितरण"],
+    "consumer_name": {
+      "patterns": [
+        "Consumer Name\\s*[:\\-]?\\s*([^\\n\\d]+)", 
+        "Name\\s*[:\\-]?\\s*([^\\n\\d]+)", 
+        "Consumer\\s*[:\\-]?\\s*([^\\n\\d]+)", 
+        "ग्राहकाचे नाव\\s*[:\\-]?\\s*([^\\n\\d]+)",
+        "(?:M|N)\\s*\\|\\s*\\n([^\\n]+)"
+      ]
+    },
+    "consumer_number": {
+      "patterns": [
+        "Consumer No\\s*[:\\-]?\\s*([\\d\\sI/|]+)", 
+        "Account No\\s*[:\\-]?\\s*([\\d\\sI/|]+)", 
+        "ग्राहक क्रमांक\\s*[:\\-]?\\s*([\\d\\sI/|]+)",
+        "MSEDCLO?([\\dI\\s/|]+)"
+      ]
+    },
+    "fixed_charges": {
+      "patterns": [
+        "Fixed Charges\\s*[:\\-]?\\s*(?:Rs\\.?|₹)?\\s*([\\d\\s\\.]+)", 
+        "Fixed Charge\\s*[:\\-]?\\s*([\\d\\s\\.]+)", 
+        "स्थिर आकार\\s*[:\\-]?\\s*(?:Rs\\.?|₹|रु)?\\s*\\n?([\\d\\s\\.]+)"
+      ]
+    },
+    "sanctioned_load": {
+      "patterns": [
+        "Sanctioned Load\\s*[:\\-]?\\s*([\\d\\s\\.\\*]+)\\s*(?:KW|HP)", 
+        "Sanc\\. Load\\s*[:\\-]?\\s*([\\d\\s\\.\\*]+)", 
+        "मंजूर भार\\s*[:\\-]?\\s*\\n?([\\d\\s\\.\\*]+)"
+      ]
+    },
+    "connection_type": {
+      "patterns": [
+        "Tariff\\s*[:\\-]?\\s*([A-Za-z0-9\\-]+)", 
+        "Category\\s*[:\\-]?\\s*([A-Za-z0-9\\-]+)", 
+        "तारीफ\\s*[:\\-]?\\s*([A-Za-z0-9\\-]+)",
+        "दर\\s*संकेत\\s*\\**\\s*[:\\-]?\\s*([A-Za-z0-9\\-]+)"
+      ]
+    },
+    "units": {
+      "patterns": [
+        "Units\\s*(?:Billed)?\\s*[:\\-]?\\s*(\\d+)", 
+        "Consumption\\s*[:\\-]?\\s*(\\d+)", 
+        "वापरलेले युनिट्स\\s*[:\\-]?\\s*\\n?(\\d+)", 
+        "युनिट्स\\s*[:\\-]?\\s*\\n?(\\d+)",
+        "एकूण वापर\\s*\\n?(\\d+)",
+        "एकण वापर\\s*\\n?(\\d+)"
+      ]
+    },
+    "bill_amount": {
+      "patterns": [
+        "Net Bill Amount\\s*[:\\-]?\\s*(?:Rs\\.?|₹)?\\s*([\\d\\s\\.]+)", 
+        "Total Amount Payable\\s*[:\\-]?\\s*(?:Rs\\.?|₹)?\\s*([\\d\\s\\.]+)", 
+        "Bill Amount\\s*[:\\-]?\\s*(?:Rs\\.?|₹)?\\s*([\\d\\s\\.]+)", 
+        "देयका?\\s*रक्कम\\s*(?:रु)?\\s*[:\\-]?\\s*\\n*(?:Rs\\.?|₹|रु)?\\s*([\\d\\s\\.]+)"
+      ]
+    },
+    "bill_month": {
+      "patterns": [
+        "Bill Month\\s*[:\\-]?\\s*([A-Za-z]+\\s*-\\s*\\d{2,4})", 
+        "Billing Period\\s*[:\\-]?\\s*([A-Za-z]+[- ]\\d{2,4})", 
+        "देयक महिना\\s*[:\\-]?\\s*([A-Za-z]+\\s*-\\s*\\d{2,4})",
+        "(जानेवारी|फेब्रुवारी|मार्च|एप्रिल|मे|जून|जुलै|ऑगस्ट|सप्टेंबर|ऑक्टोबर|नोव्हेंबर|डिसेंबर|Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)[\\s\\-]*(\\d{2,4})"
+      ]
+    }
+  },
+  "BSES": {
+    "keywords": ["bses", "bypl", "brpl"],
+    "consumer_name": {"patterns": ["Name\\s*:\\s*(.*)"]},
+    "consumer_number": {"patterns": ["CA No\\.\\s*:\\s*(\\d+)"]},
+    "fixed_charges": {"patterns": ["Fixed Charges\\s*[:\\-]?\\s*(\\d+\\.?\\d*)"]},
+    "sanctioned_load": {"patterns": ["Sanctioned Load\\s*[:\\-]?\\s*(\\d+\\.?\\d*)"]},
+    "connection_type": {"patterns": ["Tariff Category\\s*[:\\-]?\\s*([A-Za-z0-9\\-]+)"]},
+    "units": {"patterns": ["Billed Units\\s*[:\\-]?\\s*(\\d+)"]},
+    "bill_amount": {"patterns": ["Net Amount Payable\\s*[:\\-]?\\s*(\\d+\\.?\\d*)"]},
+    "bill_month": {"patterns": ["Bill Month\\s*[:\\-]?\\s*([A-Za-z]+\\s*-\\s*\\d{2,4})"]}
+  },
+  "TATA": {
+    "keywords": ["tata power", "tata"],
+    "consumer_name": {"patterns": ["Consumer Name\\s*:\\s*(.*)"]},
+    "consumer_number": {"patterns": ["Consumer No\\s*:\\s*(\\d+)"]},
+    "fixed_charges": {"patterns": ["Fixed Charges\\s*[:\\-]?\\s*(\\d+\\.?\\d*)"]},
+    "sanctioned_load": {"patterns": ["Sanctioned Load\\s*[:\\-]?\\s*(\\d+\\.?\\d*)"]},
+    "connection_type": {"patterns": ["Tariff\\s*[:\\-]?\\s*([A-Za-z0-9\\-]+)"]},
+    "units": {"patterns": ["Units\\s*[:\\-]?\\s*(\\d+)"]},
+    "bill_amount": {"patterns": ["Amount Payable\\s*[:\\-]?\\s*(\\d+\\.?\\d*)"]},
+    "bill_month": {"patterns": ["Bill Month\\s*[:\\-]?\\s*([A-Za-z]+\\s*-\\s*\\d{2,4})"]}
+  }
+}
