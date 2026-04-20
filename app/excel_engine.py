@@ -57,7 +57,7 @@ class ExcelEngine:
             ws[cell_ref].fill = header_fill
             ws[cell_ref].alignment = center_align
             
-        # 4. Insert dynamic extracted row at Row 9
+        # 4. Insert current month data at Row 9
         ws["B9"] = 1
         ws["C9"] = consumer_data.get("bill_month", {}).get("value", "")
         try:
@@ -74,24 +74,45 @@ class ExcelEngine:
         ws["E9"] = bill_amount
         ws["F9"] = "=(E9-D$5)/D9"
         
-        # Currency formatting
+        # Currency formatting for Row 9
         ws["E9"].number_format = '₹#,##0.00'
         ws["F9"].number_format = '₹#,##0.00'
+
+        # 5. Insert historical data (Rows 10-21)
+        history = consumer_data.get("consumption_history", [])
+        for i, entry in enumerate(history[:12]): # Max 12 months
+            row = 10 + i
+            ws[f"B{row}"] = i + 2
+            ws[f"C{row}"] = entry.get("month", "")
+            try:
+                h_units = float(entry.get("units", 0))
+            except:
+                h_units = 0.0
+            ws[f"D{row}"] = h_units
+            
+            # Bill Amount empty as requested, but we still apply formula for Unit Cost IF needed 
+            # and format the cells
+            ws[f"E{row}"].number_format = '₹#,##0.00'
+            ws[f"F{row}"] = f"=(E{row}-D$5)/D{row}" 
+            ws[f"F{row}"].number_format = '₹#,##0.00'
         
-        # 5. Summary Formulas (Rows 22-28)
-        ws["B22"] = "Average Units:"
+        # 6. Summary Formulas (Rows 22-26)
+        ws["B22"] = "Average:"
         ws["C22"] = "=AVERAGE(D9:D21)"
         
-        ws["B23"] = "Required kW:"
+        ws["B23"] = "kW:"
         ws["C23"] = "=(C22*12*1.1)/1400"
         
-        ws["B24"] = "Solar Panels Needed:"
+        ws["B24"] = "Solar Panels:"
         ws["C24"] = "=(C23/$C$7)*1000"
         
-        ws["B25"] = "Solar Capacity (kW):"
+        ws["B25"] = "Solar capacity:"
         ws["C25"] = "=ROUND(C24,0)*$C$7/1000"
+
+        ws["B26"] = "Number of Panels:"
+        ws["C26"] = "=ROUND(C24,0)"
         
-        for r in range(22, 26):
+        for r in range(22, 27):
             ws[f"B{r}"].font = bold_font
             
         # Save fresh workbook
