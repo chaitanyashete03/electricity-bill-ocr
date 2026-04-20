@@ -1,6 +1,8 @@
 import os
 import json
-import google.generativeai as genai
+import mimetypes
+from google import genai
+from google.genai import types
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -12,20 +14,25 @@ class GeminiExtractorEngine:
         if not self.api_key:
             raise ValueError("GEMINI_API_KEY not found. Please set it in Render Environment Variables.")
         
-        genai.configure(api_key=self.api_key)
-        
-        # gemini-1.5-flash is the correct free-tier model for standard AI Studio keys
-        self.model = genai.GenerativeModel('gemini-1.5-flash')
+        # Use the new google-genai SDK (v1 API, not deprecated v1beta)
+        self.client = genai.Client(api_key=self.api_key)
+        self.model = 'gemini-1.5-flash'
         
     def extract_from_file(self, file_path: str) -> dict:
         """
-        Uploads a file to Gemini and extracts structured JSON details.
-        Returns a tuple/dict with provider and extracted fields.
+        Reads file bytes and sends them inline to Gemini for structured extraction.
+        This avoids the File Upload API entirely for simpler, more reliable calls.
         """
         try:
-            # Upload the file to Gemini API
-            sample_file = genai.upload_file(path=file_path)
+            # Read file as bytes
+            with open(file_path, 'rb') as f:
+                file_bytes = f.read()
             
+            # Auto-detect MIME type
+            mime_type, _ = mimetypes.guess_type(file_path)
+            if not mime_type:
+                mime_type = 'image/jpeg' # Safe fallback
+
             prompt = """
             You are a highly accurate data extraction system. I will provide an image or pdf of an electricity bill.
             Extract the data strictly according to this JSON schema.
@@ -38,9 +45,9 @@ class GeminiExtractorEngine:
             Extract each month and its corresponding units into the 'consumption_history' array.
             Translate Marathi month names (e.g., नोव्हेबर, ऑक्टोबर) to English names (e.g., November, October).
             
-            Output exact JSON format:
+            Output exact JSON format (no markdown, no code blocks):
             {
-              "provider": "MSEDCL", // MSEDCL, BSES, TATA, or Other
+              "provider": "MSEDCL",
               "fields": {
                  "consumer_name": { "value": "", "confidence": 0.95 },
                  "consumer_number": { "value": "", "confidence": 0.95 },
@@ -57,21 +64,22 @@ class GeminiExtractorEngine:
             }
             """
             
-            response = self.model.generate_content(
-                [sample_file, prompt],
-                generation_config=genai.GenerationConfig(
+            response = self.client.models.generate_content(
+                model=self.model,
+                contents=[
+                    types.Part.from_bytes(data=file_bytes, mime_type=mime_type),
+                    prompt
+                ],
+                config=types.GenerateContentConfig(
                     response_mime_type="application/json"
                 )
             )
-            
-            # Clean up the file from GenAI servers to preserve privacy/quota
-            sample_file.delete()
             
             try:
                 data = json.loads(response.text)
                 return data
             except json.JSONDecodeError:
-                # Fallback processing if markdown block used despite prompt
+                # Fallback processing if model still adds markdown blocks
                 clean_text = response.text.replace("```json", "").replace("```", "").strip()
                 data = json.loads(clean_text)
                 return data
