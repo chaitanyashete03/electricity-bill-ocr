@@ -14,8 +14,8 @@ class GeminiExtractorEngine:
         
         genai.configure(api_key=self.api_key)
         
-        # Use gemini-1.5-flash-latest for the most stable multimodal performance
-        self.model = genai.GenerativeModel('gemini-1.5-flash-latest')
+        # gemini-2.0-flash is the current stable model for standard AI Studio keys
+        self.model = genai.GenerativeModel('gemini-2.0-flash')
         
     def extract_from_file(self, file_path: str) -> dict:
         """
