@@ -49,9 +49,13 @@ async def process_bill(request: Request, file: UploadFile = File(...)):
         temp_file.close()
 
         # Extract structured data directly with Gemini
-        gemini_result = gemini_extractor.extract_from_file(temp_file.name)
+        try:
+            gemini_result = gemini_extractor.extract_from_file(temp_file.name)
+        except Exception as extractor_err:
+            raise HTTPException(500, f"AI Engine failed: {str(extractor_err)}")
+
         if "error" in gemini_result:
-            raise HTTPException(500, f"Gemini Extraction failed: {gemini_result['error']}")
+            raise HTTPException(500, f"Extraction Error: {gemini_result['error']}")
         
         provider = gemini_result.get("provider", "Unknown")
         extracted_fields = gemini_result.get("fields", {})

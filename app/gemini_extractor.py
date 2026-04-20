@@ -8,10 +8,11 @@ load_dotenv()
 class GeminiExtractorEngine:
     def __init__(self):
         # Configure API key
-        api_key = os.getenv("GEMINI_API_KEY")
-        if not api_key:
-            print("WARNING: GEMINI_API_KEY not found in environment and .env")
-        genai.configure(api_key=api_key)
+        self.api_key = os.getenv("GEMINI_API_KEY")
+        if not self.api_key:
+            raise ValueError("GEMINI_API_KEY not found. Please set it in Render Environment Variables.")
+        
+        genai.configure(api_key=self.api_key)
         
         # Use gemini-flash-latest for very fast, accurate multimodal extraction
         self.model = genai.GenerativeModel('gemini-flash-latest')

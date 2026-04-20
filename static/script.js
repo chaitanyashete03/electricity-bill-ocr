@@ -99,7 +99,10 @@ async function handleFiles(files) {
             body: formData
         });
         
-        if (!response.ok) throw new Error("Processing failed. Please check your document.");
+        if (!response.ok) {
+            const errData = await response.json().catch(() => ({}));
+            throw new Error(errData.detail || "Processing failed. Please check your document.");
+        }
         
         const data = await response.json();
         renderVerificationForm(data);
