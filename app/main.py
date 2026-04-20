@@ -42,7 +42,8 @@ async def process_bill(request: Request, file: UploadFile = File(...)):
     if not file.filename.lower().endswith(('.pdf', '.png', '.jpg', '.jpeg')):
         raise HTTPException(400, "Unsupported file format.")
         
-    temp_file = NamedTemporaryFile(delete=False, suffix=os.path.splitext(file.filename)[1])
+    # Use /tmp for reliable temporary file storage on Render/Linux
+    temp_file = NamedTemporaryFile(delete=False, suffix=os.path.splitext(file.filename)[1], dir="/tmp")
     try:
         content = await file.read()
         temp_file.write(content)
