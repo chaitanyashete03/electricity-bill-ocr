@@ -111,9 +111,13 @@ async function handleFiles(files) {
     }
 }
 
+let consumptionHistory = [];
+
 function renderVerificationForm(data) {
     uploadSection.classList.add("hidden");
     verifySection.classList.remove("hidden");
+    
+    consumptionHistory = data.consumption_history || [];
     
     let conf = data.overall_confidence ? (data.overall_confidence * 100).toFixed(1) : "95";
     confidenceScore.innerText = `${conf}% Confidence`;
@@ -140,7 +144,7 @@ function renderVerificationForm(data) {
         connection_type: "Tariff / Connection"
     };
 
-    const fields = data.fields || data; // Handle different wrapper styles
+    const fields = data.fields || data;
 
     for(const key in displayNames) {
         const fieldData = fields[key] || { value: "", confidence: 1 };
@@ -155,16 +159,33 @@ function renderVerificationForm(data) {
         `;
         formFields.innerHTML += html;
     }
+
+    // Add History Preview
+    if (consumptionHistory.length > 0) {
+        let historyHtml = `
+            <div class="form-group" style="grid-column: 1 / -1; margin-top: 1rem;">
+                <label>Historical Consumption (from Graph)</label>
+                <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; font-size: 0.85rem;">
+        `;
+        consumptionHistory.forEach(h => {
+            historyHtml += `<div><strong>${h.month}:</strong> ${h.units}</div>`;
+        });
+        historyHtml += `</div></div>`;
+        formFields.innerHTML += historyHtml;
+    }
 }
 
 verifyForm.addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    const finalData = {};
+    const finalFields = {};
     const formData = new FormData(verifyForm);
     for(let [key, value] of formData.entries()) {
-        finalData[key] = { value: value };
+        finalFields[key] = { value: value };
     }
+
+    // Add back the history
+    finalFields["consumption_history"] = consumptionHistory;
     
     try {
         const response = await fetch("/generate", {
@@ -173,7 +194,7 @@ verifyForm.addEventListener('submit', async (e) => {
                 "Content-Type": "application/json",
                 "X-Access-Key": localStorage.getItem('energy_token') || ''
             },
-            body: JSON.stringify({fields: finalData})
+            body: JSON.stringify({fields: finalFields})
         });
         
         if (!response.ok) throw new Error("Excel generation failed");

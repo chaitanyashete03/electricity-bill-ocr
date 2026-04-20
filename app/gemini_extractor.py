@@ -32,6 +32,11 @@ class GeminiExtractorEngine:
             If a value is missing or completely illegible, leave the value empty string "".
             Estimate a confidence score between 0.0 and 1.0 (generally 0.95 if clearly visible).
             
+            EXTREMELY IMPORTANT:
+            Look at the bar chart/graph area reflecting the 12-month consumption history.
+            Extract each month and its corresponding units into the 'consumption_history' array.
+            Translate Marathi month names (e.g., नोव्हेबर, ऑक्टोबर) to English names (e.g., November, October).
+            
             Output exact JSON format:
             {
               "provider": "MSEDCL", // MSEDCL, BSES, TATA, or Other
@@ -44,7 +49,10 @@ class GeminiExtractorEngine:
                  "units": { "value": "", "confidence": 0.95 },
                  "bill_amount": { "value": "", "confidence": 0.95 },
                  "bill_month": { "value": "", "confidence": 0.95 }
-              }
+              },
+              "consumption_history": [
+                { "month": "English Month-Year", "units": 123, "confidence": 0.95 }
+              ]
             }
             """
             

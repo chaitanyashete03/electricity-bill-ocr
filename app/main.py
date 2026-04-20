@@ -59,6 +59,7 @@ async def process_bill(request: Request, file: UploadFile = File(...)):
         # Validate logic remains the same to catch out-of-bounds metrics
         validation_result = validator.validate_fields(extracted_fields)
         validation_result["provider"] = provider
+        validation_result["consumption_history"] = gemini_result.get("consumption_history", [])
         
         return JSONResponse(validation_result)
         
