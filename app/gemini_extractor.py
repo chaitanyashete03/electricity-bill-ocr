@@ -16,7 +16,7 @@ class GeminiExtractorEngine:
         
         # Use the new google-genai SDK (v1 API, not deprecated v1beta)
         self.client = genai.Client(api_key=self.api_key)
-        self.model = 'gemini-1.5-flash'
+        self.model = 'gemini-flash-latest'
         
     def extract_from_file(self, file_path: str) -> dict:
         """
