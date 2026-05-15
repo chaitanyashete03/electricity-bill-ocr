@@ -10,7 +10,7 @@ from app.validator import ValidationEngine
 from app.excel_engine import ExcelEngine
 from fastapi import Request
 
-ACCESS_KEY = os.getenv("ENERGYBAE_ACCESS_KEY", "energy2026") # Default for demo
+ACCESS_KEY = os.getenv("ENERGYBAE_ACCESS_KEY", "chaita2007")
 
 app = FastAPI()
 
